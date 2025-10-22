@@ -1,0 +1,49 @@
+//Short Definition:
+//Strategy Pattern is a behavioral design pattern that lets you define a family of algorithms (or behaviors), put each of them in a separate class,
+  and make their objects interchangeable at runtime.
+
+
+Code
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+class Payment
+{
+    
+   PaymentStrategy p;
+   
+   Payment(PaymentStrategy p)
+   {
+       this.p=p;
+   }
+    
+    public void pay()
+    {
+        p.pay();
+    }
+}
+
+interface PaymentStrategy{
+    public abstract void pay();
+}
+
+class CreditCard implements PaymentStrategy{
+    public void pay(){
+        System.out.println("payment is done via credit card");
+    }
+}
+    
+class DebitCard implements PaymentStrategy{
+    public void pay(){
+        System.out.println("payment is done via debit card");
+    }
+    
+}
+class Main {
+    public static void main(String[] args) {
+      CreditCard c=new CreditCard();
+      Payment p =new Payment(c);
+      p.pay();
+      
+      
+    }
+}
