@@ -1,0 +1,118 @@
+// ===== Abstract Factory Pattern Example =====
+
+/*
+Abstract Factory Pattern:
+Provides an interface to create a family of related products (e.g., Burger + GarlicBread)
+without specifying their concrete classes.
+Concrete factories decide which specific products to instantiate.
+The client uses the factory interface and is independent of concrete product classes.
+*/
+
+
+// 1️⃣ Product Interfaces
+interface Burger {
+    void prepareBurger();
+}
+
+interface GarlicBread {
+    void prepareGarlicBread();
+}
+
+// 2️⃣ Concrete Products
+class SimpleBurger implements Burger {
+    public void prepareBurger() {
+        System.out.println("Simple Burger is ready");
+    }
+}
+
+class VegyBurger implements Burger {
+    public void prepareBurger() {
+        System.out.println("Vegy Burger is ready");
+    }
+}
+
+class WheatSimpleBurger implements Burger {
+    public void prepareBurger() {
+        System.out.println("Wheat Simple Burger is ready");
+    }
+}
+
+class WheatVegyBurger implements Burger {
+    public void prepareBurger() {
+        System.out.println("Wheat Vegy Burger is ready");
+    }
+}
+
+// Garlic Breads
+class SimpleGarlicBread implements GarlicBread {
+    public void prepareGarlicBread() {
+        System.out.println("Simple Garlic Bread is ready");
+    }
+}
+
+class VegyGarlicBread implements GarlicBread {
+    public void prepareGarlicBread() {
+        System.out.println("Vegy Garlic Bread is ready");
+    }
+}
+
+class WheatSimpleGarlicBread implements GarlicBread {
+    public void prepareGarlicBread() {
+        System.out.println("Wheat Simple Garlic Bread is ready");
+    }
+}
+
+class WheatVegyGarlicBread implements GarlicBread {
+    public void prepareGarlicBread() {
+        System.out.println("Wheat Vegy Garlic Bread is ready");
+    }
+}
+
+// 3️⃣ Abstract Factory Interface
+interface FoodFactory {
+    Burger createBurger();
+    GarlicBread createGarlicBread();
+}
+
+// 4️⃣ Concrete Factories
+class BurgerKingFactory implements FoodFactory {
+    public Burger createBurger() {
+        return new VegyBurger();          // BurgerKing produces Vegy Burger
+    }
+
+    public GarlicBread createGarlicBread() {
+        return new SimpleGarlicBread();   // BurgerKing produces Simple Garlic Bread
+    }
+}
+
+class SinghKingFactory implements FoodFactory {
+    public Burger createBurger() {
+        return new WheatVegyBurger();         // SinghKing produces Wheat Vegy Burger
+    }
+
+    public GarlicBread createGarlicBread() {
+        return new WheatVegyGarlicBread();    // SinghKing produces Wheat Vegy Garlic Bread
+    }
+}
+
+// 5️⃣ Client Code
+public class Main {
+    public static void main(String[] args) {
+
+        // Using BurgerKing Factory
+        FoodFactory burgerKing = new BurgerKingFactory();
+        Burger bkBurger = burgerKing.createBurger();
+        GarlicBread bkGarlic = burgerKing.createGarlicBread();
+
+        bkBurger.prepareBurger();
+        bkGarlic.prepareGarlicBread();
+
+        // Using SinghKing Factory
+        FoodFactory singhKing = new SinghKingFactory();
+        Burger skBurger = singhKing.createBurger();
+        GarlicBread skGarlic = singhKing.createGarlicBread();
+
+        skBurger.prepareBurger();
+        skGarlic.prepareGarlicBread();
+    }
+}
