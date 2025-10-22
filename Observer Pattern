@@ -1,0 +1,78 @@
+
+
+// 📘 Definition:
+// The Observer Design Pattern defines a **one-to-many dependency**
+// between objects so that when **one object (Subject)** changes state,
+// **all its dependents (Observers)** are automatically notified and updated.
+//
+// ✅ Real-life example: YouTube Channel and its Subscribers.
+// When a channel uploads a new video, all subscribers are notified.
+//
+// Components:
+// 1. Subject (Channel) → maintains list of observers (Subscribers)
+// 2. Observer (Subscriber) → gets updates from Subject
+// 3. Concrete Subject (Hungama) → actual class that notifies observers
+// 4. Concrete Observer (Sachi) → reacts when notified
+// -------------------------------------------------------------
+
+code:
+
+import java.util.*;
+
+interface Channel {
+    void addSubscriber(Subscriber s);
+    void removeSubscriber(Subscriber s);
+    void notifySubscribers();
+}
+
+class Hungama implements Channel {
+    private String name;
+    private List<Subscriber> subscribers;
+    private String latestVideo;
+    
+    Hungama(String name, String latestVideo) {
+        this.name = name;
+        this.latestVideo = latestVideo;
+        subscribers = new ArrayList<>();
+    }
+    
+    public void setLatestVideo(String latestVideo) {
+        this.latestVideo = latestVideo;
+        notifySubscribers();  // Notify when new video is set
+    }
+    
+    public void addSubscriber(Subscriber s) {
+        subscribers.add(s);
+    }
+    
+    public void removeSubscriber(Subscriber s) {
+        subscribers.remove(s);
+    }
+    
+    public void notifySubscribers() {
+        for (Subscriber sub : subscribers) {
+            sub.update(name, latestVideo);
+        }
+    }
+}
+
+interface Subscriber {
+    void update(String channelName, String latestVideo);
+}
+
+class Sachi implements Subscriber {
+    public void update(String channelName, String latestVideo) {
+        System.out.println("The channel " + channelName + " has uploaded a new video: " + latestVideo);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Hungama hungama = new Hungama("Aaj Tak", "Breaking News");
+        Sachi s1 = new Sachi();
+        hungama.addSubscriber(s1);
+        
+        hungama.setLatestVideo("India Wins World Cup!");
+        hungama.setLatestVideo("Horror Night Special!");
+    }
+}
