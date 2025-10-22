@@ -1,0 +1,81 @@
+// ===== Factory Method Pattern Example =====
+
+//Definition (Factory Method Pattern)
+//The Factory Method Pattern is a creational design pattern that defines an interface or abstract class for creating objects, but lets the subclasses decide which class to instantiate.
+//In other words, the creation of objects is delegated to subclasses, allowing the client code to use the objects without knowing their concrete classes.
+
+interface Burger {
+    void prepare();
+}
+
+// Concrete Products
+class SimpleBurger implements Burger {
+    public void prepare() {
+        System.out.println("Simple Burger is ready");
+    }
+}
+
+class VegyBurger implements Burger {
+    public void prepare() {
+        System.out.println("Vegy Burger is ready");
+    }
+}
+
+class WheatSimpleBurger implements Burger {
+    public void prepare() {
+        System.out.println("Wheat Simple Burger is ready");
+    }
+}
+
+class WheatVegyBurger implements Burger {
+    public void prepare() {
+        System.out.println("Wheat Vegy Burger is ready");
+    }
+}
+
+// Factory Method Interface
+interface FactoryMethod {
+    Burger createBurger(String type);
+}
+
+// Concrete Factory 1
+class BurgerKing implements FactoryMethod {
+    public Burger createBurger(String type) {
+        if (type.equalsIgnoreCase("vegy")) {
+            return new VegyBurger();
+        } else if (type.equalsIgnoreCase("simple")) {
+            return new SimpleBurger(); // <-- return was missing in your previous code
+        }
+        throw new IllegalArgumentException("Invalid burger type: " + type);
+    }
+}
+
+// Concrete Factory 2
+class SinghKing implements FactoryMethod {
+    public Burger createBurger(String type) {
+        if (type.equalsIgnoreCase("WheatVegy")) {
+            return new WheatVegyBurger();
+        } else if (type.equalsIgnoreCase("WheatSimple")) {
+            return new WheatSimpleBurger();
+        }
+        throw new IllegalArgumentException("Invalid burger type: " + type);
+    }
+}
+
+// Client
+public class Main {
+    public static void main(String[] args) {
+        String type1 = "vegy";
+        String type2 = "WheatVegy";
+
+        // Using BurgerKing Factory
+        BurgerKing burgerKing = new BurgerKing();
+        Burger burger1 = burgerKing.createBurger(type1);
+        burger1.prepare();
+
+        // Using SinghKing Factory
+        SinghKing singhKing = new SinghKing();
+        Burger burger2 = singhKing.createBurger(type2);
+        burger2.prepare();
+    }
+}
