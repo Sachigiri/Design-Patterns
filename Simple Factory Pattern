@@ -1,0 +1,47 @@
+
+//The Simple Factory Pattern is a creational design pattern that provides a way to create objects without
+exposing the creation logic to the client, and instead delegates the object creation to a separate factory class or method.
+// ===== Simple Factory Pattern =====
+
+// Step 1: Common Interface
+interface Burger {
+    void prepare();
+}
+
+// Step 2: Concrete Implementations
+class SimpleBurger implements Burger {
+    public void prepare() {
+        System.out.println("Simple Burger is ready");
+    }
+}
+
+class VegyBurger implements Burger {
+    public void prepare() {
+        System.out.println("Vegy Burger is ready");
+    }
+}
+
+// Step 3: Factory Class (Decides which object to create)
+class BurgerFactory {
+    public Burger createBurger(String type) {
+        if (type.equalsIgnoreCase("vegy")) {
+            return new VegyBurger();
+        } else if (type.equalsIgnoreCase("simple")) {
+            return new SimpleBurger();
+        }
+        throw new IllegalArgumentException("Invalid burger type: " + type);
+    }
+}
+
+// Step 4: Client
+public class Main {
+    public static void main(String[] args) {
+        BurgerFactory factory = new BurgerFactory();
+
+        Burger b1 = factory.createBurger("vegy");
+        b1.prepare();
+
+        Burger b2 = factory.createBurger("simple");
+        b2.prepare();
+    }
+}
