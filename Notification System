@@ -1,0 +1,100 @@
+//below is notification sysytem using observer and startegy pattern
+
+import java.util.*;
+
+// -------------------- 1️⃣ Notification --------------------
+interface Notification {
+    String getContent();
+}
+
+class SimpleText implements Notification {
+    private String msg;
+    SimpleText(String msg) { this.msg = msg; }
+    public String getContent() { return msg; }
+}
+
+// -------------------- 2️⃣ Delivery Strategy --------------------
+interface DeliveryStrategy {
+    void send(String msg);
+}
+
+class Email implements DeliveryStrategy {
+    public void send(String msg) {
+        System.out.println("📧 Email sent → " + msg);
+    }
+}
+
+class SMS implements DeliveryStrategy {
+    public void send(String msg) {
+        System.out.println("📱 SMS sent → " + msg);
+    }
+}
+
+class Push implements DeliveryStrategy {
+    public void send(String msg) {
+        System.out.println("🔔 Push notification sent → " + msg);
+    }
+}
+
+// -------------------- 3️⃣ Observer Pattern --------------------
+interface Observer {
+    void update(String msg);
+}
+
+interface Subject {
+    void add(Observer ob);
+    void remove(Observer ob);
+    void notifyObservers(String msg);
+}
+
+class NotificationCenter implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+
+    public void add(Observer ob) { observers.add(ob); }
+    public void remove(Observer ob) { observers.remove(ob); }
+
+    public void notifyObservers(String msg) {
+        for (Observer o : observers) o.update(msg);
+    }
+
+    public void publish(Notification notification) {
+        notifyObservers(notification.getContent());
+    }
+}
+
+// -------------------- 4️⃣ Concrete Observers --------------------
+class LoggerObserver implements Observer {
+    public void update(String msg) {
+        System.out.println("🪵 [Logger] Message logged → " + msg);
+    }
+}
+
+class DeliveryObserver implements Observer {
+    private DeliveryStrategy strategy;
+    DeliveryObserver(DeliveryStrategy strategy) { this.strategy = strategy; }
+
+    public void update(String msg) {
+        strategy.send(msg);
+    }
+}
+
+// -------------------- 5️⃣ Client --------------------
+public class Main {
+    public static void main(String[] args) {
+
+        // Create notification center
+        NotificationCenter center = new NotificationCenter();
+
+        // Add observers
+        center.add(new LoggerObserver());
+        center.add(new DeliveryObserver(new Email()));
+        center.add(new DeliveryObserver(new SMS()));
+        center.add(new DeliveryObserver(new Push()));
+
+        // Create notification
+        Notification notification = new SimpleText("Server restarted successfully.");
+
+        // Publish notification (automatically notifies all observers)
+        center.publish(notification);
+    }
+}
