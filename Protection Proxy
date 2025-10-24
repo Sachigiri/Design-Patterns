@@ -1,0 +1,50 @@
+interface UnlockPDF {
+    void unlock(String file);
+}
+
+class Adobe implements UnlockPDF {
+    public void unlock(String file) {
+        System.out.println(file + " has been unlocked successfully.");
+    }
+}
+
+class User {
+    boolean premium;
+
+    User(boolean premium) {
+        this.premium = premium;
+    }
+}
+
+class Proxy implements UnlockPDF {
+    private User user;
+    private Adobe adobe;
+
+    Proxy(User user) {
+        this.user = user;
+    }
+
+    public void unlock(String file) {
+        if (user.premium) {
+            if (adobe == null) {
+                adobe = new Adobe(); // create real object only when needed
+            }
+            adobe.unlock(file);
+        } else {
+            System.out.println("Access Denied: Upgrade to premium to unlock " + file);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User freeUser = new User(false);
+        User premiumUser = new User(true);
+
+        UnlockPDF proxy1 = new Proxy(freeUser);
+        proxy1.unlock("FreeUserFile.pdf");
+
+        UnlockPDF proxy2 = new Proxy(premiumUser);
+        proxy2.unlock("PremiumUserFile.pdf");
+    }
+}
