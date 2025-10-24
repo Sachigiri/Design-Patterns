@@ -1,0 +1,45 @@
+//Definition
+Adapter converts interface of a class into another interface that client expects.Adapter lets classes work together ,whch could not work together becaus eof diffreent interface
+
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+interface Report
+{
+    public String getJsonData(String data);
+}
+
+class XMLProvider
+{
+    public String getXMLData(String data)
+    {
+        return "I am xml data";
+    }
+}
+
+class Adapter implements Report{
+    XMLProvider x;
+    Adapter(XMLProvider x)
+    {
+        this.x=x;
+    }
+    public String getJsonData(String data)
+    {
+        String xmlData=x.getXMLData(data);
+        return xmlData+" "+"now i am json data";
+    }
+}
+
+class Client{
+   public void getReport(Report r,String data)
+   {
+       System.out.println(r.getJsonData(data));
+   }
+}
+class Main {
+    public static void main(String[] args) {
+        XMLProvider x=new XMLProvider();
+        Adapter adapter=new Adapter(x);
+        Client client=new Client();
+        client.getReport(adapter,"abc");
+    }
+}
