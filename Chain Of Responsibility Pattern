@@ -1,0 +1,82 @@
+abstract class MoneyHandler {
+    protected MoneyHandler next;
+
+    public void setNext(MoneyHandler next) {
+        this.next = next;
+    }
+
+    public abstract void dispense(int amount);
+}
+
+class ThousandHandler extends MoneyHandler {
+    private int availableNotes;
+
+    public ThousandHandler(int availableNotes) {
+        this.availableNotes = availableNotes;
+    }
+
+    @Override
+    public void dispense(int amount) {
+        int notesNeeded = amount / 1000;
+
+        if (notesNeeded > availableNotes) {
+            notesNeeded = availableNotes;
+            availableNotes = 0;
+        } else {
+            availableNotes -= notesNeeded;
+        }
+
+        System.out.println(notesNeeded + " x ₹1000 notes dispensed");
+        int remainder = amount - (notesNeeded * 1000);
+
+        if (remainder > 0) {
+            if (next != null)
+                next.dispense(remainder);
+            else
+                System.out.println("Insufficient denominations to dispense full amount.");
+        }
+    }
+}
+
+class HundredHandler extends MoneyHandler {
+    private int availableNotes;
+
+    public HundredHandler(int availableNotes) {
+        this.availableNotes = availableNotes;
+    }
+
+    @Override
+    public void dispense(int amount) {
+        int notesNeeded = amount / 100;
+
+        if (notesNeeded > availableNotes) {
+            notesNeeded = availableNotes;
+            availableNotes = 0;
+        } else {
+            availableNotes -= notesNeeded;
+        }
+
+        System.out.println(notesNeeded + " x ₹100 notes dispensed");
+        int remainder = amount - (notesNeeded * 100);
+
+        if (remainder > 0) {
+            if (next != null)
+                next.dispense(remainder);
+            else
+                System.out.println("Insufficient denominations to dispense full amount.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ThousandHandler thousand = new ThousandHandler(6); // 6 notes of ₹1000
+        HundredHandler hundred = new HundredHandler(10);   // 10 notes of ₹100
+        thousand.setNext(hundred);
+
+        int amountToWithdraw = 4600;
+        System.out.println("\nDispensing amount: ₹" + amountToWithdraw);
+        thousand.dispense(amountToWithdraw);
+        System.out.println("Dispensing complete!");
+    }
+}
