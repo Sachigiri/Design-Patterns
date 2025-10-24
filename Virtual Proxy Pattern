@@ -1,0 +1,43 @@
+interface ImageDisplay {
+    void display();
+}
+
+class Displayer implements ImageDisplay {
+    private String path;
+
+    Displayer(String path) {
+        this.path = path;
+        System.out.println("Loading image from disk...");
+    }
+
+    public void display() {
+        System.out.println("Displaying image: " + path);
+    }
+}
+
+class Proxy implements ImageDisplay {
+    private Displayer displayer;
+    private String path;
+
+    Proxy(String path) {
+        this.path = path;
+    }
+
+    public void display() {
+        if (displayer == null) {
+            displayer = new Displayer(path);
+        }
+        displayer.display();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ImageDisplay image = new Proxy("image****");
+
+        System.out.println("Proxy created, image not loaded yet...");
+        image.display(); // loads now
+        System.out.println("Second display call:");
+        image.display(); // doesn’t reload
+    }
+}
